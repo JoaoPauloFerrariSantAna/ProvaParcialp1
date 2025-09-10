@@ -1,3 +1,4 @@
+using System.Threading;
 using ApiProvaParcial;
 
 namespace ProvaParcialP1
@@ -14,50 +15,59 @@ namespace ProvaParcialP1
             InitializeComponent();
         }
 
+        private static void CheckSubmittion(string input)
+        {
+            if (String.IsNullOrEmpty(input))
+            {
+                throw new Exception("Given input is empty");
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             string productName = textBox1.Text;
+            UInt16 newId = 0;
+            UInt16 productQuantity = 0;
+            Product product = null;
 
-            if (String.IsNullOrEmpty(productName))
-            {
-                throw new Exception("Add error handling");
-            }
+            CheckSubmittion(productName);
 
             productName = productName.Trim();
 
-            UInt16 newId = ++this.GlobalProductId;
-            UInt16 productQuantity = UInt16.Parse(textBox2.Text);
-            Product product = new Product() { Id = newId, Name = productName, Quantity = productQuantity };
+            newId = ++this.GlobalProductId;
+            productQuantity = UInt16.Parse(textBox2.Text);
+            product = new Product() { Id = newId, Name = productName, Quantity = productQuantity };
 
             this.GlobalInventoryManager.AddProduct(product);
+
+            label4.Text = "Inserido com sucesso";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Product productToRemove = new Product();
-
             string productName = textBox3.Text;
 
-            if (String.IsNullOrEmpty(productName))
-            {
-                throw new Exception("Add error handling");
-            }
+            CheckSubmittion(productName);
 
             productName = productName.Trim();
 
-            // first of all, we need to fill the "productToRemove"'s fields
-            // so that when we  get to this.GlobalInventoryManager.Contains it does not errs
-            foreach (Product p in this.GlobalInventoryManager.ConsultStock())
-            {
-                if (productName == p.Name)
-                {
-                    // because then we'll copy p into productToRemove
-                    productToRemove = p;
-                    break;
-                }
-            }
+            this.GlobalInventoryManager.RemoveProduct(productName);
+        }
 
-            this.GlobalInventoryManager.RemoveProduct(productToRemove);
+        private void button3_Click(object sender, EventArgs e)
+        {
+            List<Product> products = this.GlobalInventoryManager.ConsultStock();
+
+            foreach (Product p in products)
+            {
+                label5.Text += $"- {p.Name}. Stock: {p.Quantity}\n";
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // is creating a button just to "hide" the contents of a label overkill? yes.
+            label5.Text = "";
         }
     }
 }
