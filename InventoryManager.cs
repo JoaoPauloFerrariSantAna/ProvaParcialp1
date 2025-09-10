@@ -4,32 +4,32 @@ namespace ApiProvaParcial
 {
     public class InventoryManager
     {
-        private List<Product> productList { get; set; }
+        private List<Product> ProductList { get; set; }
 
         public InventoryManager(List<Product> productList)
         {
-            this.productList = productList;
+            this.ProductList = productList;
         }
 
         public void AddProduct(Product product)
         {
-            this.productList.Add(product);
+            this.ProductList.Add(product);
         }
 
         public void RemoveProduct(Product product)
         {
-            if (!this.productList.Contains(product))
+            if (!this.ProductList.Contains(product))
             {
                 Console.WriteLine("item does not exists, so i cant erased");
                 return;
             }
 
-            this.productList.Remove(product);
+            this.ProductList.Remove(product);
         }
 
         public List<Product> ConsultStock()
         {
-            return this.productList;
+            return this.ProductList;
         }
     }
 }
